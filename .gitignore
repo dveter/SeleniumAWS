@@ -1,0 +1,14 @@
+/.idea/
+/classes/
+*.iml
+build/
+.gradle
+build-gradle/
+gradle.properties
+
+# compiled
+/build/deploy
+/build/output
+
+/*/classes/
+/*/classes-test/

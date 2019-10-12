@@ -19,7 +19,7 @@ public class FieldooTest {
     private static WebDriver driver;
 
     private static FieldooPage fieldooPage;
-    private LoginPage loginPage;
+    private static LoginPage loginPage;
 
     @BeforeClass
     public static void setUp(){
@@ -38,13 +38,15 @@ public class FieldooTest {
 
     @Test
     public void isLoginPageAccessible() {
-        LoginPage loginPage = fieldooPage.goToLoginPage();
+        loginPage = fieldooPage.goToLoginPage();
         assertTrue(loginPage.isInitialized());
     }
 
     @Test
-    public void someLoginTest() {
+    public void someFailingTest() {
         loginPage.login("", "");
+        assertTrue("Empty password message is mistyped or missing.",
+                loginPage.getErrorMessages().contains("Password cannot be empty."));
     }
 
     @AfterClass

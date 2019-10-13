@@ -42,7 +42,7 @@ public class FieldooTest {
             System.setProperty("webdriver.chrome.driver", PATH_TO_CHROMEDRIVER);
             driver = new ChromeDriver(options);
         }
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.get(FIELDOO_PAGE_URL);
     }
 

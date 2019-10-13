@@ -29,7 +29,7 @@ sudo unzip chromedriver_linux64.zip -d /opt/selenium
 # Setup Selenium Server binary for remote test running
 wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
 sudo mv selenium-server-standalone-*.jar /opt/selenium/selenium-server-standalone.jar
-java -jar /opt/selenium/selenium-server-standalone.jar -port 5555 &
+java -jar -Dwebdriver.chrome.driver=/opt/selenium/chromedriver /opt/selenium/selenium-server-standalone.jar -port 5555 &
 
 # Automatically run test every day at 3:00 AM
 sudo crontab -l -u ec2-user | { cat; echo "0 3 * * * /home/ec2-user/selenium/./gradlew test > /dev/null 2>&1"; } | sudo crontab -u ec2-user -

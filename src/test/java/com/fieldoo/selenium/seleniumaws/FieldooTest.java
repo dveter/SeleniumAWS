@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class FieldooTest {
     private static final boolean IS_REMOTE = Boolean.parseBoolean(System.getProperty("REMOTE"));
-    private static final String SELENIUM_SERVER_HUB_URL = "http://localhost:5555/wd/hub";
+    private static final String SELENIUM_SERVER_HUB_URL = "http://" + System.getProperty("HOST") + ":5555/wd/hub";
     private static final String PATH_TO_CHROMEDRIVER = "/opt/selenium/chromedriver";
     private static final String FIELDOO_PAGE_URL = "http://www.fieldoo.com";
 
@@ -30,12 +31,16 @@ public class FieldooTest {
 
     @BeforeClass
     public static void setUp() throws MalformedURLException {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
         if (IS_REMOTE) {
-            DesiredCapabilities desiredCaps = desiredCaps = DesiredCapabilities.chrome();
+            DesiredCapabilities desiredCaps = DesiredCapabilities.chrome();
+            desiredCaps.setCapability(ChromeOptions.CAPABILITY, options);
             driver = new RemoteWebDriver(new URL(SELENIUM_SERVER_HUB_URL), desiredCaps);
         } else {
             System.setProperty("webdriver.chrome.driver", PATH_TO_CHROMEDRIVER);
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(options);
         }
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get(FIELDOO_PAGE_URL);

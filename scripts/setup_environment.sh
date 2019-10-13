@@ -32,7 +32,7 @@ sudo mv selenium-server-standalone-*.jar /opt/selenium/selenium-server-standalon
 java -jar /opt/selenium/selenium-server-standalone.jar -port 5555 &
 
 # Automatically run test every day at 3:00 AM
-crontab -l | { cat; echo "0 3 * * * /home/ec2-user/selenium/./gradlew test > /dev/null 2>&1"; } | crontab -
+sudo crontab -l -u ec2-user | { cat; echo "0 3 * * * /home/ec2-user/selenium/./gradlew test > /dev/null 2>&1"; } | sudo crontab -u ec2-user -
 
 # BONUS: Install Apache to read html reports easily
 sudo yum install -y httpd24

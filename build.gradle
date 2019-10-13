@@ -1,11 +1,15 @@
 plugins {
     id 'java'
+    id 'org.hidetake.ssh' version '2.10.1'
 }
 
 group 'com.fieldoo.selenium'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+def ec2Host = '<EC2_HOSTNAME>'
+def sshKey = '<PATH_TO_SSH_KEY>'
 
 repositories {
     mavenCentral()
@@ -21,6 +25,35 @@ test {
         systemProperty 'REMOTE', 'true'
         print "Running tests via Selenium Server..."
     }
+    systemProperty 'HOST', ec2Host
+    // Comment out the following line if running locally
+    reports.html.destination = file("/var/www/html")
 }
+
+remotes {
+    seleniumEC2 {
+        host = ec2Host
+        user = 'ec2-user'
+        identity = file(sshKey)
+    }
+}
+
+task deploy {
+    doLast {
+        ssh.run {
+            session(remotes.seleniumEC2) {
+                put from: "${buildDir}/distributions/SeleniumAWS-${version}.zip", into: "/home/ec2-user"
+                execute "unzip -o /home/ec2-user/SeleniumAWS-${version}.zip -d /home/ec2-user/selenium"
+            }
+        }
+    }
+}
+
+task zipProject(type: Zip) {
+    from projectDir
+    exclude 'build', '.idea', '.gradle', '*.pem'
+}
+
+deploy.dependsOn(zipProject)
 
 
